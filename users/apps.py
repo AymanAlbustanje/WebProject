@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ScheduleManagementConfig(AppConfig):
+class UsersConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'schedule_management'
+    name = 'users'
