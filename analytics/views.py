@@ -3,4 +3,4 @@ from django.http import HttpResponse
 # Create your views here.
 
 def analytics(request):
-    return HttpResponse('hello wooorld')
+    return HttpResponse('analytics page')
