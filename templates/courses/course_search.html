@@ -1,0 +1,17 @@
+<!-- courses/templates/courses/course_search.html -->
+<h2>Course Search Results</h2>
+<form method="get">
+  <input type="text" name="q" placeholder="Search for a course" />
+  <button type="submit">Search</button>
+</form>
+{% if query %}
+<p>Search results for "{{ query }}":</p>
+<ul>
+  {% for course in courses %}
+  <li>{{ course.course_name }}</li>
+  <!-- Display other course details as needed -->
+  {% empty %}
+  <li>No courses found.</li>
+  {% endfor %}
+</ul>
+{% endif %}
