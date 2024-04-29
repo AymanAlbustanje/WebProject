@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'courses.apps.CoursesConfig',
     'schedules.apps.SchedulesConfig',
     'mainpage.apps.MainpageConfig',
+    'userauth.apps.UserauthConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
