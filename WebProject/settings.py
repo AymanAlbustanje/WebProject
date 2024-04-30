@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'reports.apps.ReportsConfig',
+    'members.apps.MembersConfig',
     'users.apps.UsersConfig',
     'courses.apps.CoursesConfig',
     'schedules.apps.SchedulesConfig',
