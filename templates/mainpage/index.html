@@ -1,18 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Web project</title>
-  </head>
-  <body>
-    <h1>Welcome to my Web project</h1>
+{% extends 'base.html' %}
+
+{% block title %}Web project{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-5">Welcome to my Web project</h1>
 
     <form action="{% url 'logout' %}" method="post">
-      {% csrf_token %}
-      <button type="submit">Logout</button>
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger mt-3">Logout</button>
     </form>
-    <br />
-    <button type="submit"><a href="/members/Login">Login</a></button>
-  </body>
-</html>
+
+    <br>
+
+    <a href="{% url 'login' %}" class="btn btn-primary mt-3">Login</a>
+</div>
+{% endblock %}
