@@ -9,6 +9,9 @@ class Course(models.Model):
     prerequisites = models.ManyToManyField('self', blank=True)
     capacity = models.PositiveIntegerField()
 
+    def __str__(self):
+        return self.course_name
+
 class Enrollment(models.Model):
     student = models.ForeignKey('users.Student', on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
