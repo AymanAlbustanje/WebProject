@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Course Detail - {{ course.course_name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title">{{ course.course_name }}</h1>
+                    <p class="card-text"><strong>Course Code:</strong> {{ course.course_code }}</p>
+                    <p class="card-text"><strong>Instructor:</strong> {{ course.instructor_name }}</p>
+                    <p class="card-text"><strong>Description:</strong> {{ course.description }}</p>
+                    <p class="card-text"><strong>Schedule:</strong> {{ course.schedule }}</p>
+                    <p class="card-text"><strong>Prerequisites:</strong> 
+                        {% for prerequisite in course.prerequisites.all %}
+                            {{ prerequisite.course_name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    <p class="card-text"><strong>Enrollment:</strong> 
+                        <span class="badge bg-primary">{{ course.enrollment.count }}</span>/
+                        <span class="badge bg-secondary">{{ course.capacity }}</span>
+                    </p>
+                    {% if course.enrollment.count < course.capacity %}
+                    <form id="enroll-form" action="{% url 'enroll_course' course.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary" id="enroll-btn">Enroll</button>
+                    </form>
+                    <p id="enrollment-count"><strong>Enrollment:</strong> {{ course.enrollment.count }}</p>
+                    {% else %}
+                        <button type="button" class="btn btn-danger" disabled>Course Full</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

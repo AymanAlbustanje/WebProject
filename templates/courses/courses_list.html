@@ -1,0 +1,31 @@
+<!-- courses_list.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Course Search Results{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-5 mb-4">Course Search Results</h1>
+    <div class="row">
+        {% if courses %}
+            {% for course in courses %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ course.course_code }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ course.course_name }}</h6>
+                            <p class="card-text">Instructor: {{ course.instructor_name }}</p>
+                            <a href="{% url 'enroll_course' course.id %}" class="btn btn-primary">Enroll</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <p>No courses found.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
