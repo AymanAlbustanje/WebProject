@@ -55,3 +55,18 @@ def drop_course(request, course_id):
             # If the user is enrolled in the course, delete the enrollment
             enrollment.delete()
     return redirect('course_detail', course_id=course_id)
+
+def schedule_page(request):
+    if request.user.is_authenticated and hasattr(request.user, 'student'):
+        student = request.user.student
+        enrollments = Enrollment.objects.filter(student=student).select_related('course')
+    else:
+        enrollments = []
+    
+    return render(request, 'schedule_page.html', {
+        'enrollments': enrollments,
+    })
+
+def all_courses(request):
+    courses = Course.objects.all()
+    return render(request, 'courses/all_courses.html', {'courses': courses})

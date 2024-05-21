@@ -24,7 +24,7 @@ def login_user(request):
     
 def logout_user(request):
     logout(request)
-    return redirect('mainpage')
+    return redirect('login')
 
 def register_user(request):
     form = SignUpForm()

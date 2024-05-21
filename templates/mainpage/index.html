@@ -4,15 +4,9 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="mt-5">Welcome to my Web project</h1>
-
-    <form action="{% url 'logout' %}" method="post">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger mt-3">Logout</button>
-    </form>
-
-    <br>
-
-    <a href="{% url 'login' %}" class="btn btn-primary mt-3">Login</a>
+    <div class="welcome-container mt-5 text-center p-4 bg-light rounded">
+        <h1>Welcome to my Web project</h1>
+    </div>
 </div>
+
 {% endblock %}
