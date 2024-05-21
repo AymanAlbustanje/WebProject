@@ -1,3 +1,4 @@
+# schedules/models.py
 from django.db import models
 from courses.models import Course
 
@@ -7,3 +8,6 @@ class Schedule(models.Model):
     end_time = models.TimeField()
     room_no = models.CharField(max_length=20)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='schedules')
+
+    def __str__(self):
+        return f"{self.days} {self.start_time} - {self.end_time}"

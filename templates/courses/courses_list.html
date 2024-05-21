@@ -1,31 +1,23 @@
-<!-- courses_list.html -->
-
 {% extends 'base.html' %}
 
-{% block title %}Course Search Results{% endblock %}
+{% block title %}Course Search{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1 class="mt-5 mb-4">Course Search Results</h1>
-    <div class="row">
-        {% if courses %}
-            {% for course in courses %}
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ course.course_code }}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{ course.course_name }}</h6>
-                            <p class="card-text">Instructor: {{ course.instructor_name }}</p>
-                            <a href="{% url 'enroll_course' course.id %}" class="btn btn-primary">Enroll</a>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <div class="col-12">
-                <p>No courses found.</p>
-            </div>
-        {% endif %}
-    </div>
+<div class="container mt-4">
+    <h1>Search Results</h1>
+    <form method="GET" action="{% url 'course_search' %}">
+        <input type="text" name="q" placeholder="Search courses..." value="{{ request.GET.q }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+    <ul class="list-group mt-3">
+        {% for course in courses %}
+            <li class="list-group-item">
+                <a href="{% url 'course_detail' course.id %}">{{ course.course_name }} - {{ course.course_code }}</a>
+                <p><strong>Instructor:</strong> {{ course.instructor_name }}</p>
+            </li>
+        {% empty %}
+            <li class="list-group-item">No courses found.</li>
+        {% endfor %}
+    </ul>
 </div>
 {% endblock %}

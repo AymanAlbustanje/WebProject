@@ -1,52 +1,57 @@
 # courses/views.py
-
+from pyexpat.errors import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models import Q
-from django.http import JsonResponse
-
-from users.models import Student
+from django.contrib.auth.decorators import login_required
 from .models import Course, Enrollment
+from users.models import Student
 
 def course_search_view(request):
     query = request.GET.get('q')
-    print("Query:", query)  # Debug statement
     if query:
         courses = Course.objects.filter(
             Q(course_code__icontains=query) |
             Q(course_name__icontains=query) |
             Q(instructor_name__icontains=query)
         )
-        print("Filtered Courses:", courses)  # Debug statement
     else:
         courses = Course.objects.all()
     return render(request, 'courses/courses_list.html', {'courses': courses})
 
+@login_required
 def enroll_course(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
-    
-    # Check if the user is authenticated
-    if not request.user.is_authenticated:
-        # Redirect to the login page if the user is not authenticated
-        return redirect('login')
-    
-    # Retrieve or create the associated Student object for the current user
     student, created = Student.objects.get_or_create(user=request.user)
-
-    # Check if the student is already enrolled in the course
     if Enrollment.objects.filter(student=student, course=course).exists():
-        # Redirect to a page indicating that the student is already enrolled
         return redirect('course_detail', course_id=course_id)
-
-    # If not already enrolled, create an enrollment record
-    enrollment = Enrollment.objects.create(student=student, course=course)
-    
-    # Increment the enrollment count of the course
+    if course.enrollment_count >= course.capacity:
+        return redirect('course_detail', course_id=course_id)
+    Enrollment.objects.create(student=student, course=course)
     course.enrollment_count += 1
     course.save()
-
-    # Redirect to a page indicating successful enrollment
     return redirect('course_detail', course_id=course_id)
 
 def course_detail(request, course_id):
-    course = get_object_or_404(Course, pk=course_id)
-    return render(request, 'courses/course_detail.html', {'course': course})
+    course = get_object_or_404(Course, id=course_id)
+    enrollment_count = course.enrollments.count()
+    schedules = course.schedules.all()
+    enrolled = False
+    if request.user.is_authenticated and hasattr(request.user, 'student'):
+        enrolled = Enrollment.objects.filter(course=course, student=request.user.student).exists()
+    
+    return render(request, 'courses/course_detail.html', {
+        'course': course,
+        'enrollment_count': enrollment_count,
+        'enrolled': enrolled,
+        'schedules': schedules,
+    })
+
+@login_required
+def drop_course(request, course_id):
+    if request.method == 'POST':
+        # Get the current user's enrollment for the specified course
+        enrollment = Enrollment.objects.filter(student=request.user.student, course_id=course_id).first()
+        if enrollment:
+            # If the user is enrolled in the course, delete the enrollment
+            enrollment.delete()
+    return redirect('course_detail', course_id=course_id)
