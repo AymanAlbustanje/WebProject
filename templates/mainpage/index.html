@@ -9,4 +9,32 @@
     </div>
 </div>
 
+<div class="container mt-5">
+    {% if user.is_authenticated %}
+        {% if user.student %}
+            <div class="completed-courses-container card">
+                <div class="card-body">
+                    <h2 class="card-title">Completed Courses:</h2>
+                    <ul class="list-group list-group-flush">
+                        {% for course in user.student.completed_courses.all %}
+                            <li class="list-group-item">{{ course.course_name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="reminders-container card mt-5">
+                <div class="card-body">
+                    <h2 class="card-title">Reminders:</h2>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Enrollment period for the next semester starts on August 1st.</li>
+                        <li class="list-group-item">Deadline to drop courses without penalty is August 15th.</li>
+                        <li class="list-group-item">Final exams begin on December 10th.</li>
+                        <li class="list-group-item">Remember to complete your course evaluations by December 20th.</li>
+                        <!-- Add more reminders here -->
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
 {% endblock %}

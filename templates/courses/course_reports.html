@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Course Reports{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Course Reports</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Summary</h5>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Total Courses: <span class="badge bg-primary">{{ total_courses }}</span></li>
+                <li class="list-group-item">Total Enrollments: <span class="badge bg-primary">{{ total_enrollments }}</span></li>
+                <li class="list-group-item">Average Enrollments per Course: <span class="badge bg-primary">{{ average_enrollments_per_course }}</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

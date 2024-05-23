@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 
+{% block title %}Course Detail{% endblock %}
+
 {% block content %}
 <div class="container mt-4">
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title" style="font-weight: bold;">{{ course.course_name }}</h5>
-            <p></p>
+            <h5 class="card-title font-weight-bold">{{ course.course_name }}</h5>
             <p class="card-text"><strong>Course Code:</strong> {{ course.course_code }}</p>
             <p class="card-text"><strong>Description:</strong> {{ course.description }}</p>
             <p class="card-text"><strong>Instructor:</strong> {{ course.instructor_name }}</p>
@@ -25,24 +26,39 @@
                 <span class="badge bg-secondary">{{ course.capacity }}</span>
             </p>
             {% if user.is_authenticated %}
-                {% if not user.student %}
-                    <p>You need to <a href="{% url 'login' %}">log in</a> as a student to enroll in this course.</p>
-                {% else %}
+                {% if user.student %}
                     {% if enrolled %}
-                        <form action="{% url 'drop_course' course.id %}" method="post">
+                        <div class="mb-3">
+                            <form action="{% url 'drop_course' course.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Drop Course</button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <div class="mb-3">
+                            {% if enrollment_count < course.capacity %}
+                                <form action="{% url 'enroll_course' course.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary">Enroll</button>
+                                </form>
+                            {% else %}
+                                <button type="button" class="btn btn-danger" disabled>Course Full</button>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    {% if course in user.student.completed_courses.all %}
+                        <form action="{% url 'undo_mark_completed' course.id %}" method="post">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">Drop Course</button>
+                            <button type="submit" class="btn btn-warning">Undo Mark as Completed</button>
                         </form>
                     {% else %}
-                        {% if enrollment_count < course.capacity %}
-                            <form action="{% url 'enroll_course' course.id %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-primary">Enroll</button>
-                            </form>
-                        {% else %}
-                            <button type="button" class="btn btn-danger" disabled>Course Full</button>
-                        {% endif %}
+                        <form action="{% url 'mark_completed' course.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success">Mark as Completed</button>
+                        </form>
                     {% endif %}
+                {% else %}
+                    <p>You need to <a href="{% url 'login' %}">log in</a> as a student to enroll in this course.</p>
                 {% endif %}
             {% else %}
                 <p>You need to <a href="{% url 'login' %}">log in</a> to enroll in this course.</p>
